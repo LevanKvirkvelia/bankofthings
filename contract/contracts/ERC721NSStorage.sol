@@ -1,3 +1,5 @@
+pragma solidity ^0.8.4;
+
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
@@ -7,6 +9,9 @@ abstract contract ERC721NSStorage is ERC721URIStorage {
 
     // Optional mapping for token NSs
     mapping(uint256 => string) private _tokenNSs;
+
+    event NSUpdate(uint256 indexed tokenId);
+   
 
     function tokenNS(uint256 tokenId) public view virtual returns (string memory) {
         require(
@@ -25,6 +30,7 @@ abstract contract ERC721NSStorage is ERC721URIStorage {
             _isApprovedOrOwner(_msgSender(), tokenId),
             "ERC721: transfer caller is not owner nor approved"
         );
+        emit NSUpdate(tokenId);
         _tokenNSs[tokenId] = _tokenNS;
     }
 
