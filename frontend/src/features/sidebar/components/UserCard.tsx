@@ -7,8 +7,26 @@ export function UserCard() {
 		<Flex boderStyle="solid" borderWidth={1} rounded="lg" p="1">
 			<Avatar src={wallet?.icons.iconSrc} mr="1" />
 			<Flex minW="0" direction="column">
-				ds
 				{isWalletSelected ? (
+					<Button
+						size="sm"
+						onClick={async () => {
+							await disconnectWallet?.();
+						}}
+					>
+						Disconnect
+					</Button>
+				) : (
+					<Button
+						size="sm"
+						onClick={async () => {
+							await selectWallet?.();
+						}}
+					>
+						Connect
+					</Button>
+				)}
+				{isWalletSelected && (
 					<Badge
 						overflow="hidden"
 						textOverflow="ellipsis"
@@ -21,15 +39,6 @@ export function UserCard() {
 					>
 						{address}
 					</Badge>
-				) : (
-					<Button
-						size="sm"
-						onClick={async () => {
-							await selectWallet?.();
-						}}
-					>
-						Connect
-					</Button>
 				)}
 			</Flex>
 		</Flex>

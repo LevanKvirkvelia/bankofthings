@@ -42,6 +42,15 @@ export function Web3Provider({ children }: { children?: ReactNode | undefined })
 			darkMode: false,
 			dappId: BLOCKNATIVE_KEY, // optional API key
 			networkId: NETWORK_ID, // Ethereum network ID
+			walletSelect: {
+				wallets: [
+					{ walletName: 'metamask' },
+					{
+						walletName: 'walletConnect',
+						infuraKey: 'https://kovan.infura.io/v3/f8d1f60a2c614dd6b1d579e05e85c94b',
+					},
+				],
+			},
 		},
 	});
 
