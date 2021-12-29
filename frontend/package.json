@@ -73,8 +73,6 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "@chakra-ui/react": "^1.7.3",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
@@ -84,6 +82,7 @@
     "@testing-library/user-event": "^13.5.0",
     "assert": "^2.0.0",
     "bnc-onboard": "^1.37.0",
+    "copy-webpack-plugin": "^10.2.0",
     "crypto-browserify": "^3.12.0",
     "framer-motion": "^5",
     "https-browserify": "^1.0.0",
@@ -91,6 +90,8 @@
     "moralis": "^0.0.176",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "os-browserify": "^0.3.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
     "react-moralis": "^0.3.11",
     "react-query": "^3.34.7",
