@@ -2,7 +2,8 @@ import express from "express";
 import "express-async-errors";
 import bodyParser from "body-parser";
 import Moralis from "moralis/node";
-import { fetchTokenNS } from "./libs/NFTs";
+import { fetchTokenMetadata, fetchTokenNS } from "./libs/NFTs";
+import { setNameServers } from "./libs/namecheap";
 
 const app = express();
 const port = 3000;
@@ -16,11 +17,12 @@ app.post("/nsupdate", async (req, res) => {
   const { tokenId } = req.body;
   console.log(req.body);
   await Moralis.start({ serverUrl, appId });
-  const [tokenNS] = await Promise.all([
+  const [tokenNS, token] = await Promise.all([
     fetchTokenNS(tokenId),
-    // fetchTokenMetadata(tokenId),
+    fetchTokenMetadata(tokenId),
   ]);
-  // await setNameServers(token.metadata.name, tokenNS);
+  const resp = await setNameServers(token.metadata.name, tokenNS);
+  console.log({ namecheap: resp });
   res.json({ tokenNS });
 });
 
