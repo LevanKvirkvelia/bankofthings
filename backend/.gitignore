@@ -22,7 +22,5 @@ build/
 .serverless_plugins
 env.js
 tmp
-package-lock.json
-yarn.lock
 test
 /.build/
