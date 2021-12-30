@@ -81,6 +81,7 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "assert": "^2.0.0",
+    "bnc-notify": "^1.9.2",
     "bnc-onboard": "^1.37.0",
     "copy-webpack-plugin": "^10.2.0",
     "crypto-browserify": "^3.12.0",
@@ -101,6 +102,8 @@
     "stream-http": "^3.2.0",
     "use-onboard": "^0.2.8",
     "web-vitals": "^2.1.2",
-    "web3": "^1.6.1"
+    "web3": "^1.6.1",
+    "web3-core": "^1.6.1",
+    "web3-utils": "^1.6.1"
   }
 }

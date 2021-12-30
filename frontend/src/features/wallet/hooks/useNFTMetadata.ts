@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import ky from 'ky';
 
-export function useNFTMetadata(cid: string) {
+export function useNFTMetadata(cid: string | undefined) {
 	return useQuery(
 		['NFTMetadata', cid],
 		() => {

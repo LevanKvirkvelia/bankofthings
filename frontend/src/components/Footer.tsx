@@ -1,5 +1,5 @@
 import { Box, chakra, Container, Stack, Text, useColorModeValue, VisuallyHidden } from '@chakra-ui/react';
-import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { FaTwitter } from 'react-icons/fa';
 import { ReactNode } from 'react';
 
 const SocialButton = ({ children, label, href }: { children: ReactNode; label: string; href: string }) => {
@@ -38,17 +38,17 @@ export function Footer() {
 				justify={{ base: 'center', md: 'space-between' }}
 				align={{ base: 'center', md: 'center' }}
 			>
-				<Text>© 2020 Chakra Templates. All rights reserved</Text>
+				<Text>© Bank of Things. All rights reserved</Text>
 				<Stack direction="row" spacing={6}>
 					<SocialButton label="Twitter" href="#">
 						<FaTwitter />
 					</SocialButton>
-					<SocialButton label="YouTube" href="#">
-						<FaYoutube />
-					</SocialButton>
-					<SocialButton label="Instagram" href="#">
-						<FaInstagram />
-					</SocialButton>
+					{/*<SocialButton label="YouTube" href="#">*/}
+					{/*	<FaYoutube />*/}
+					{/*</SocialButton>*/}
+					{/*<SocialButton label="Instagram" href="#">*/}
+					{/*	<FaInstagram />*/}
+					{/*</SocialButton>*/}
 				</Stack>
 			</Container>
 		</Box>

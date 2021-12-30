@@ -1,6 +1,7 @@
 import Moralis from 'moralis';
 import { useQuery } from 'react-query';
 import { useWeb3 } from '../../web3/components/Web3Provider';
+import { Config } from '../../../Config';
 
 export function useNFTWallet() {
 	const { address } = useWeb3();
@@ -8,9 +9,9 @@ export function useNFTWallet() {
 		['getNFTsForContract', address],
 		() => {
 			return Moralis.Web3API.account.getNFTsForContract({
-				chain: 'kovan',
 				address: address || '',
-				token_address: '0xfBb52e09E0Bd4c45804929211aFf1bd23D9D0c46',
+				chain: Config.chain,
+				token_address: Config.contract,
 			});
 		},
 		{ enabled: !!address },
