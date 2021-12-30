@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "kovan": "npx hardhat run ./scripts/deploy.ts --network kovan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

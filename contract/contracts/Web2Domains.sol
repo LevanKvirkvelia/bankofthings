@@ -10,6 +10,10 @@ contract Web2Domain is Ownable, ERC721NSStorage {
 
     constructor() ERC721("Web2Domain", "W2D") {}
 
+    function burn(uint256 tokenId) public onlyOwner() {
+        super._burn(tokenId);
+    }
+
     function createW2D(address player, string memory tokenURI)
         public
         onlyOwner()
