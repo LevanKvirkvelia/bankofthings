@@ -37,5 +37,8 @@
     "build": "tsc",
     "preinstall": "node -e \"if(!/yarn|lerna/.test(process.env.npm_execpath)) throw new Error('You must use Yarn to install, not NPM')\"",
     "serve": "nodemon --exec 'NODE_ENV=development ts-node -r tsconfig-paths/register src/index.ts' -e ts"
+  },
+  "engines" : {
+    "node" : ">=14.0.0"
   }
 }
