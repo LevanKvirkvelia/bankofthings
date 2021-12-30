@@ -1,14 +1,21 @@
 {
   "compilerOptions": {
-    "preserveConstEnums": true,
-    "strictNullChecks": true,
-    "sourceMap": true,
-    "allowJs": true,
-    "target": "es5",
-    "outDir": ".build",
+    "target": "ES2020",
+    "module": "commonjs",
+    "outDir": "./build",
+    "baseUrl": "./src",
+    "paths": {
+      "types": [
+        "types/*"
+      ],
+      "services": [
+        "services/*"
+      ],
+      "utils": [
+        "utils/*"
+      ]
+    },
     "moduleResolution": "node",
-    "lib": ["es2015"],
-    "rootDir": "./",
     "noImplicitAny": false,
     "declaration": true,
     "skipLibCheck": true,
