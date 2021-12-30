@@ -1,20 +1,16 @@
 import { URLSearchParams } from "url";
 import fetch from "node-fetch";
+import HttpsProxyAgent from "https-proxy-agent";
 
 const NAMECHEAP_API_KEY = process.env.NAMECHEAP_API_KEY as string;
+const PROXY = process.env.PROXY as string;
+const PROXY_HOSTNAME = new URL(PROXY).hostname;
 
-export const getMyIP = async function () {
-  const resp = await fetch("https://api.myip.com").then((r) => r.text());
-  console.log({ resp });
-  const { ip } = JSON.parse(resp);
-  return ip;
-};
+const proxyAgent = HttpsProxyAgent(PROXY);
 
 export async function setNameServers(domain: string, nameServers: string) {
   if (domain.split(".").length > 2) throw new Error("Domain validation error");
   const [SLD, TLD] = domain.toLowerCase().split(".");
-
-  const clientIp = await getMyIP();
 
   const searchParams = new URLSearchParams({
     ApiKey: NAMECHEAP_API_KEY,
@@ -23,11 +19,12 @@ export async function setNameServers(domain: string, nameServers: string) {
     ApiUser: "InkOut",
     UserName: "InkOut",
     Command: "namecheap.domains.dns.setCustom",
-    ClientIp: clientIp,
+    ClientIp: PROXY_HOSTNAME,
     NameServers: nameServers,
   });
 
   return fetch(
-    `https://api.namecheap.com/xml.response?${searchParams.toString()}`
+    `https://api.namecheap.com/xml.response?${searchParams.toString()}`,
+    { agent: proxyAgent }
   ).then((r) => r.text());
 }
