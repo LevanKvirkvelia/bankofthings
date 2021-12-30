@@ -24,6 +24,6 @@ app.post("/nsupdate", async (req, res) => {
   res.json({ tokenNS });
 });
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
