@@ -1,0 +1,42 @@
+{
+  "name": "serverless",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.10.2",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.12.0",
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.83",
+    "@types/node-fetch": "^2.5.12",
+    "@types/ws": "^8.2.0",
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.1",
+    "connection-string-parser": "^1.0.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "express-async-errors": "^3.1.1",
+    "flatted": "^3.2.2",
+    "got": "^12.0.0",
+    "ipfs-http-client": "^55.0.0",
+    "jose": "^3.17.0",
+    "mongodb": "^4.0.1",
+    "moralis": "^0.0.176",
+    "node-fetch": "^2.6.6",
+    "node-p5": "^1.0.4",
+    "p-memoize": "^6.0.1",
+    "uuid": "^8.3.2",
+    "ws": "^7.5.3"
+  },
+  "scripts": {
+    "start": "node build/index.js",
+    "build": "tsc",
+    "preinstall": "node -e \"if(!/yarn|lerna/.test(process.env.npm_execpath)) throw new Error('You must use Yarn to install, not NPM')\"",
+    "serve": "nodemon --exec 'NODE_ENV=development ts-node -r tsconfig-paths/register src/index.ts' -e ts"
+  }
+}

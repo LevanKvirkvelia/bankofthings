@@ -1,6 +1,6 @@
 import { SimpleGrid } from '@chakra-ui/react';
 import { useWeb3 } from '../../features/web3/components/Web3Provider';
-import { useNFTWallet } from '../../features/web3/hooks/useNFTWallet';
+import { useNFTWallet } from '../../features/wallet/hooks/useNFTWallet';
 import { WalletItem } from '../../features/wallet/components/WalletItem';
 
 export function WalletRoute() {

@@ -7,25 +7,15 @@ export function UserCard() {
 		<Flex boderStyle="solid" borderWidth={1} rounded="lg" p="1">
 			<Avatar src={wallet?.icons.iconSrc} mr="1" />
 			<Flex minW="0" direction="column">
-				{isWalletSelected ? (
-					<Button
-						size="sm"
-						onClick={async () => {
-							await disconnectWallet?.();
-						}}
-					>
-						Disconnect
-					</Button>
-				) : (
-					<Button
-						size="sm"
-						onClick={async () => {
-							await selectWallet?.();
-						}}
-					>
-						Connect
-					</Button>
-				)}
+				<Button
+					size="xs"
+					onClick={async () => {
+						if (isWalletSelected) await disconnectWallet?.();
+						else await selectWallet?.();
+					}}
+				>
+					{isWalletSelected ? 'Disconnect' : 'Connect'}
+				</Button>
 				{isWalletSelected && (
 					<Badge
 						overflow="hidden"
