@@ -91,7 +91,7 @@ app.post("/mint", async (req, res) => {
         lastNftTX: undefined,
         lastNftContractAddress: CONTRACT_ADDRESS,
         lastTransfer: new Date(),
-        __v: Math.random().toString(),
+        __v: newProtectionId,
       },
       $setOnInsert: { domain },
     },
@@ -99,7 +99,7 @@ app.post("/mint", async (req, res) => {
   );
 
   const hash = await mintToken(to, ipfsCID);
-  console.log({ hash });
+
   await domainsCollection.updateOne(
     { domain, __v: newProtectionId },
     { $set: { lastNftTX: hash } }
