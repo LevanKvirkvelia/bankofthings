@@ -14,8 +14,8 @@ app.use(function (err, req, res, next) {
   res.status(500).json({ error: err });
 });
 
-import("routes/nsupdate");
-import("routes/mint");
+import("./routes/nsupdate");
+import("./routes/mint");
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Example app listening at http://localhost:${port}`);
