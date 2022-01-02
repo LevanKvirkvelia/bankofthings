@@ -55,6 +55,7 @@ app.post("/mint", async (req, res) => {
   );
 
   if (
+    !includesLogin ||
     !isFromNamecheap ||
     !isDomainExists ||
     !isAllVerified ||
@@ -77,7 +78,10 @@ app.post("/mint", async (req, res) => {
       "This domain is already connected to the platform. Please contact support"
     );
 
-  if (currentDomain.lastTransfer?.getTime() > email.date.getTime())
+  if (
+    currentDomain?.lastTransfer &&
+    currentDomain?.lastTransfer?.getTime() > email.date.getTime()
+  )
     throw new Error("Email date check error. Please contact support");
 
   const protectionId = currentDomain?.__v;

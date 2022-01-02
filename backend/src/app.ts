@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import cors from "cors";
 
 require("express-async-errors");
 
@@ -8,6 +9,7 @@ export const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
+app.use(cors({ credentials: true, origin: true }));
 
 app.use(function (err, req, res, next) {
   console.error("HANDLER!", err.stack);

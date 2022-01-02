@@ -28,6 +28,7 @@ interface LinkItemProps {
 }
 const LinkItems: Array<LinkItemProps> = [
 	{ name: 'Home', link: '/', icon: '🏠' },
+	{ name: 'Add domain', link: '/addDomain', icon: '➕' },
 	{ name: 'Wallet', link: '/wallet', icon: '💎' },
 ];
 

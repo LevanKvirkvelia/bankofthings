@@ -20,6 +20,7 @@
     "axios": "^0.21.1",
     "body-parser": "^1.19.1",
     "connection-string-parser": "^1.0.3",
+    "cors": "^2.8.5",
     "dkim": "^0.7.2",
     "dotenv": "^10.0.0",
     "ethers": "^5.5.2",

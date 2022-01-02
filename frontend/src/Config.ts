@@ -1,7 +1,11 @@
 import { AbiItem } from 'web3-utils';
 
 export const Config = {
-	contract: '0xfBb52e09E0Bd4c45804929211aFf1bd23D9D0c46',
+	contract: '0x7DA4BBc8055F14E63F67152813a97BD93dB4C0BD',
+	backend:
+		window.location.hostname === 'localhost'
+			? 'http://localhost:3000'
+			: 'https://bankofthings-keu7b.ondigitalocean.app',
 	chain: 'kovan' as const,
 	abi: [
 		{ inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
