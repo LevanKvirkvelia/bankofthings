@@ -1,29 +1,33 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
+import Fastify from "fastify";
+import { AddressInfo } from "net";
+import fastifyCors from "fastify-cors";
+import fastifyCookie from "fastify-cookie";
+import nsUpdatePlugin from "./routes/domains/nsUpdatePlugin";
+import mint from "./routes/domains/mintPlugin";
+import appsPlugin from "./routes/apps/appsPlugin";
 
-require("express-async-errors");
+const fastify = Fastify();
 
-export const app = express();
-
-const port = 3000;
-
-app.use(bodyParser.json());
-app.use(cors({ credentials: true, origin: true }));
-
-app.use(function (err, req, res, next) {
-  console.error("HANDLER!", err.stack);
-  res.status(500).json({ error: err });
+fastify.register(fastifyCors, {
+  origin: "*",
+  methods: ["POST", "GET", "DELETE", "PUT", "PATCH"],
 });
 
-import("./routes/nsupdate");
-import("./routes/mint");
-
-app.listen(port, "0.0.0.0", () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+fastify.setErrorHandler(function (error, request, reply) {
+  // Log error
+  this.log.error(error);
+  // Send error response
+  reply.status(400).send({ ok: false, error: error.message });
 });
 
-app.use((err, req, res, next) => {
-  res.status(403);
-  res.json({ error: err.message });
+fastify.register(fastifyCookie);
+fastify.register(nsUpdatePlugin);
+fastify.register(mint);
+fastify.register(appsPlugin);
+
+fastify.listen(process.env.PORT || 3000, "0.0.0.0", (err) => {
+  if (err) throw err;
+  console.log(
+    `server listening on ${(fastify.server.address() as AddressInfo).port}`
+  );
 });
