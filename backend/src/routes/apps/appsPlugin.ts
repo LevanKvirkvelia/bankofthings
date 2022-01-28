@@ -97,11 +97,12 @@ export default fp(async function (fastify, opts) {
 
   fastify.get<{
     Params: { appName: string };
+    Body: { sign: string };
     Querystring: {
       cursor: string;
     };
   }>("/apps/list", async (req) => {
-    const { sign } = req.cookies;
+    const { sign } = req.body;
     const { cursor } = req.query;
 
     const wallet = ethers.utils.verifyMessage(
