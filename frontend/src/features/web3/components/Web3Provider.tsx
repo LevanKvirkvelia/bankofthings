@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import Web3 from 'web3';
 import { useOnboard } from 'use-onboard';
 import Notify from 'bnc-notify';
@@ -21,6 +21,7 @@ const Web3Context = createContext<
 	{
 		web3: Web3 | null;
 		notify: ReturnType<typeof Notify>;
+		sign: string;
 	} & Partial<OnboardApi>
 >({
 	onboard: undefined,
@@ -38,6 +39,7 @@ const Web3Context = createContext<
 	isWalletSelected: false,
 	address: '',
 	balance: '0',
+	sign: '',
 });
 
 export function Web3Provider({ children }: { children?: ReactNode | undefined }) {
@@ -52,8 +54,9 @@ export function Web3Provider({ children }: { children?: ReactNode | undefined })
 		options: {
 			darkMode: false,
 			hideBranding: true,
-			dappId: BLOCKNATIVE_KEY, // optional API key
-			networkId: NETWORK_ID, // Ethereum network ID
+			dappId: BLOCKNATIVE_KEY,
+			// @ts-ignore
+			networkId: undefined,
 			walletSelect: {
 				wallets: [
 					{ walletName: 'metamask' },
@@ -67,12 +70,39 @@ export function Web3Provider({ children }: { children?: ReactNode | undefined })
 		},
 	});
 
+	const [sign, setSign] = useState<string>(() => localStorage.sign);
+
+	useEffect(() => {
+		if (!sign && web3 && onboard.address) {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			web3.eth.personal.sign('Bank of Things sign-in message', onboard.address).then((value) => {
+				setSign(value);
+				localStorage.sign = value;
+			});
+		}
+	}, [onboard.address, sign, web3]);
+
 	const provider = onboard?.wallet?.provider;
 	useEffect(() => {
 		if (provider) setWeb3(new Web3(provider));
 	}, [provider]);
 
-	const value = useMemo(() => ({ web3, ...onboard, notify }), [web3, onboard, notify]);
+	const disconnectWallet = useCallback(() => {
+		onboard.disconnectWallet();
+		localStorage.removeItem('sign');
+	}, [onboard]);
+
+	const value = useMemo(
+		() => ({
+			web3,
+			...onboard,
+			notify,
+			disconnectWallet,
+			sign,
+		}),
+		[web3, sign, onboard, notify, disconnectWallet],
+	);
 
 	return <Web3Context.Provider value={value}>{children}</Web3Context.Provider>;
 }

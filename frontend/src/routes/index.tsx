@@ -1,26 +1,52 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import * as React from 'react';
-import { Flex } from '@chakra-ui/react';
 import { WalletRoute } from './wallet/WalletRoute';
-import { Sidebar } from '../features/sidebar/components/Sidebar';
-import { Footer } from '../components/Footer';
+import { Navbar } from '../features/sidebar/components/Navbar';
 import { AddDomainRoute } from './AddDomainRoute';
+import { AccessControlRoute } from './accessControl/AccessControlRoute';
+import { CreateNotionGate } from './accessControl/CreateNotionGate';
+import { GateRoute } from './gate/GateRoute';
 
 export function AppRouters() {
 	return (
 		<BrowserRouter>
-			<Sidebar>
-				<Flex direction="column" minH="100vh">
-					<div style={{ flexGrow: 1 }}>
-						<Routes>
-							<Route path="/" element={<></>} />
-							<Route path="addDomain" element={<AddDomainRoute />} />
-							<Route path="wallet" element={<WalletRoute />} />
-						</Routes>
-					</div>
-					<Footer />
-				</Flex>
-			</Sidebar>
+			<Routes>
+				<Route path="/" element={<></>} />
+				<Route path="gate">
+					<Route path=":id" element={<GateRoute />} />
+				</Route>
+				<Route
+					path="/addNotion"
+					element={
+						<Navbar>
+							<CreateNotionGate />
+						</Navbar>
+					}
+				/>
+				<Route
+					path="/gateway"
+					element={
+						<Navbar>
+							<AccessControlRoute />
+						</Navbar>
+					}
+				/>
+				<Route
+					path="/addDomain"
+					element={
+						<Navbar>
+							<AddDomainRoute />
+						</Navbar>
+					}
+				/>
+				<Route
+					path="/wallet"
+					element={
+						<Navbar>
+							<WalletRoute />
+						</Navbar>
+					}
+				/>
+			</Routes>
 		</BrowserRouter>
 	);
 }

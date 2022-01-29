@@ -26,4 +26,7 @@ module.exports = merge(commonConfig, {
 	},
 	devtool: 'cheap-module-source-map',
 	plugins: [],
+	output: {
+		publicPath: '/',
+	},
 });

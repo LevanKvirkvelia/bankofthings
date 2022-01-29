@@ -16,6 +16,7 @@ export function WalletRoute() {
 		},
 		[onOpen],
 	);
+
 	return (
 		<Box>
 			<Flex p="4" justifyContent="flex-end">

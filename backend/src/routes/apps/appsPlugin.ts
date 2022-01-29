@@ -95,7 +95,7 @@ export default fp(async function (fastify, opts) {
       .send({ ok: true, ...result });
   });
 
-  fastify.get<{
+  fastify.post<{
     Params: { appName: string };
     Body: { sign: string };
     Querystring: {
@@ -123,7 +123,7 @@ export default fp(async function (fastify, opts) {
         {
           sort: { _id: -1 },
           limit: 20,
-          projection: { id: 1, filter: 1, appName: 1, active: 1 },
+          projection: { id: 1, filter: 1, appName: 1, active: 1, title: 1 },
         }
       )
       .toArray();

@@ -8,6 +8,7 @@ export const Gate = Type.Object({
   filter: Filter as typeof Filter,
   owner: Type.String(),
   appName: Type.String(),
+  title: Type.String(),
   appContext: Type.Any(),
   active: Type.Boolean(),
 });

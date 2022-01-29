@@ -1,5 +1,5 @@
 import { NotionAPI } from "notion-client";
-import { getPageTitle, parsePageId, uuidToId } from "notion-utils";
+import { getPageTitle, idToUuid, uuidToId } from "notion-utils";
 import { v4 as uuidv4 } from "uuid";
 import md5 from "md5";
 import {
@@ -47,23 +47,28 @@ export const Notion: IApp<
 > = {
   initializePropsSchema,
   initialize: async ({ wallet, filter, props: { pageLink, permission } }) => {
-    const pageId = parsePageId(pageLink);
+    const pageId = idToUuid(
+      pageLink.match(/[0-9a-f]{12}4[0-9a-f]{3}[89ab][0-9a-f]{15}/)[0]
+    );
     const result = await notionAPI.getPage(pageId);
     const title = getPageTitle(result);
-    const accessToken = md5(`${wallet}:${pageId}`.toLowerCase());
-
+    const accessToken = md5(`${wallet}:bankofthings`.toLowerCase());
+    console.log(accessToken);
     if (!title.includes(accessToken))
       throw new Error(
         `The page title must include the accessToken: "${accessToken}"`
       );
 
     const { space_id: spaceId } = result.block[pageId].value;
+    console.log(spaceId);
+
     const gateId = uuidv4();
     await gatesCollection.insertOne({
       id: gateId,
       appContext: { spaceId, pageId, permission },
       owner: wallet,
-      appName: "Notion",
+      appName: "notion",
+      title: pageLink,
       filter,
       active: true,
     });

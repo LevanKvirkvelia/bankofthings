@@ -9,6 +9,7 @@ export async function evalFilter(
 ) {
   const { filter, property } = filterDescription;
   const propertyResult = property?.method
+    // @ts-ignore
     ? await Properties[property.method].func(property.parameters, extras)
     : null;
 
