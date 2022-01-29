@@ -14,6 +14,7 @@ import {
 	Spacer,
 	Text,
 	useColorModeValue,
+	useToast,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useWeb3 } from '../../features/web3/components/Web3Provider';
@@ -24,9 +25,17 @@ import { useRequestAccess } from '../../features/accessControl/hooks/useRequestA
 import { useParams } from 'react-router-dom';
 
 function GateProps() {
+	const toast = useToast();
 	const [email, setEmail] = useState('');
 	const { id } = useParams<{ id: string }>();
-	const { data, mutate } = useRequestAccess('notion', id || '');
+	const { data, error, mutate } = useRequestAccess('notion', id || '');
+
+	useEffect(() => {
+		(async () => {
+			const respBody = await (error as any)?.response?.json();
+			if (respBody?.error) toast({ description: respBody.error, status: 'error' });
+		})();
+	}, [error]);
 
 	useEffect(() => {
 		if (data?.redirect) window.open(data?.redirect);
