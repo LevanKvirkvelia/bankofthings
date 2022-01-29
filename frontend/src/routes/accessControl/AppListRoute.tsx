@@ -9,7 +9,7 @@ type APP = {
 	active: boolean;
 };
 
-const APPS: APP[] = [
+export const APPS: APP[] = [
 	{
 		id: 'notion',
 		logo: 'https://bankofthings.nyc3.cdn.digitaloceanspaces.com/Notion_app_logo.png',
@@ -60,6 +60,8 @@ const APPS: APP[] = [
 		active: false,
 	},
 ];
+
+export const APPS_MAP = Object.fromEntries(APPS.map((app) => [app.id, app]));
 
 export function AppCard({ app }: { app: APP }) {
 	const navigate = useNavigate();

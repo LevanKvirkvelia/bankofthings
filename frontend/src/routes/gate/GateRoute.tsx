@@ -23,6 +23,7 @@ import { UserCard } from '../../features/sidebar/components/UserCard';
 import { WalletButton } from '../../features/sidebar/components/WalletButton';
 import { useRequestAccess } from '../../features/accessControl/hooks/useRequestAccess';
 import { useParams } from 'react-router-dom';
+import { APPS_MAP } from '../accessControl/AppListRoute';
 
 function GateProps() {
 	const toast = useToast();
@@ -82,10 +83,13 @@ export function GateRoute() {
 	return (
 		<Center minH={'100vh'} bg={useColorModeValue('gray.100', 'gray.900')}>
 			<Box width="100%" maxW="container.md" m="4" p="8" bg="white" rounded="xl">
-				<Flex mb={2} direction={{ base: 'column', md: 'row' }}>
-					<Heading as="h1" size="lg">
-						Get access to Notion
-					</Heading>
+				<Flex alignItems="flex-start" direction={{ base: 'column', md: 'row' }}>
+					<Box>
+						<Image src={APPS_MAP['notion'].logo} width={{ base: 70, md: 100 }} />
+						<Heading mt={4} mb={2} as="h1" size="lg">
+							Get access to Notion
+						</Heading>
+					</Box>
 					<Spacer />
 					<HStack spacing={1}>
 						<UserCard />

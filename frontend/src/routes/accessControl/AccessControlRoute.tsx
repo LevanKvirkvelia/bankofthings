@@ -6,6 +6,7 @@ import {
 	Flex,
 	HStack,
 	IconButton,
+	Image,
 	Input,
 	Popover,
 	PopoverBody,
@@ -25,6 +26,7 @@ import { FiCopy, FiLink } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useAccessControlList } from '../../features/accessControl/hooks/useAccessControlList';
 import { Filters } from '../../features/filters/components/Filters';
+import { APPS_MAP } from './AppListRoute';
 
 function FiltersPopover({ filter, isDisabled }: { filter: any; isDisabled: boolean }) {
 	const len = filter?.filter?.filters?.length || 1;
@@ -72,7 +74,12 @@ export function AccessControlRoute() {
 									const gateLink = `https://app.bankofthings.com/gate/${row.id}`;
 									return (
 										<Tr key={row._id}>
-											<Td>{row.appName}</Td>
+											<Td>
+												<HStack spacing={1}>
+													<Image src={APPS_MAP[row.appName].logo} height="20px" />
+													<div>{APPS_MAP[row.appName].title}</div>
+												</HStack>
+											</Td>
 											<Td>{row.title}</Td>
 											<Td>
 												<HStack spacing={1}>
