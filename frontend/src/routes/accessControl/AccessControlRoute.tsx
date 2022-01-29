@@ -3,12 +3,15 @@ import {
 	Box,
 	Button,
 	Center,
+	Flex,
+	HStack,
+	IconButton,
 	Input,
 	Popover,
 	PopoverBody,
-	PopoverCloseButton,
 	PopoverContent,
 	PopoverTrigger,
+	Spacer,
 	Table,
 	Tbody,
 	Td,
@@ -16,7 +19,10 @@ import {
 	Thead,
 	Tr,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import copy from 'copy-to-clipboard';
+import { FaCopy } from 'react-icons/fa';
+import { FiCopy, FiLink } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import { useAccessControlList } from '../../features/accessControl/hooks/useAccessControlList';
 import { Filters } from '../../features/filters/components/Filters';
 
@@ -40,8 +46,15 @@ function FiltersPopover({ filter, isDisabled }: { filter: any; isDisabled: boole
 
 export function AccessControlRoute() {
 	const { data } = useAccessControlList();
+	const navigate = useNavigate();
 	return (
-		<Center>
+		<Center flexDirection="column">
+			<Flex mt="4" width="100%" maxW="container.lg">
+				<Spacer />
+				<Button colorScheme="blue" onClick={() => navigate('create')}>
+					Create Gateway
+				</Button>
+			</Flex>
 			<Box mt="4" width="100%" maxW="container.lg" backgroundColor="white">
 				<Table variant="simple">
 					<Thead>
@@ -56,12 +69,22 @@ export function AccessControlRoute() {
 					<Tbody>
 						{data?.list
 							? data?.list.map((row: any) => {
+									const gateLink = `https://app.bankofthings.com/gate/${row.id}`;
 									return (
 										<Tr key={row._id}>
 											<Td>{row.appName}</Td>
 											<Td>{row.title}</Td>
 											<Td>
-												<Input minW="200" maxW="300" readOnly value={`https://app.bankofthings.com/gate/${row.id}`} />
+												<HStack spacing={1}>
+													<Input minW="200" maxW="300" readOnly value={gateLink} />
+													<IconButton
+														aria-label="Copy to clipboard"
+														icon={<FiLink />}
+														onClick={() => {
+															copy(gateLink);
+														}}
+													/>
+												</HStack>
 											</Td>
 											<Td>
 												<FiltersPopover isDisabled filter={row.filter} />

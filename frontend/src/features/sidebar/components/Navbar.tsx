@@ -15,7 +15,7 @@ import {
 	useDisclosure,
 	VStack,
 } from '@chakra-ui/react';
-import { useMatch, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useMatch, useNavigate } from 'react-router-dom';
 import { FiMenu } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { Logo } from '../../../components/Logo';
@@ -31,29 +31,33 @@ interface LinkItemProps {
 const LinkItems: Array<LinkItemProps> = [
 	{ name: 'Gateways', link: '/gateway', icon: '🎫' },
 	{ name: 'Ownership', link: '/ownership', icon: '👛' },
-	{ name: 'My links', link: '/links', icon: '🔗' },
+	{ name: 'My Links', link: '/links', icon: '🔗' },
 	// { name: 'Add domain', link: '/addDomain', icon: '➕' },
 	// { name: 'Wallet', link: '/wallet', icon: '💎' },
 ];
 
 const NavItem = ({ item, isMobile, onClose }: { item: LinkItemProps; isMobile: boolean; onClose?: () => void }) => {
 	const navigate = useNavigate();
-	const isActive = Boolean(useMatch(item.link));
+
 	return (
-		<Button
-			onClick={() => {
-				navigate(item.link);
-				onClose?.();
-			}}
-			variant={isActive ? 'solid' : 'ghost'}
-			borderRadius="lg"
-			cursor="pointer"
-			isFullWidth={isMobile}
-			size={isMobile ? 'lg' : 'md'}
-			leftIcon={typeof item.icon === 'string' ? <Text>{item.icon}</Text> : undefined}
-		>
-			{item.name}
-		</Button>
+		<NavLink to={item.link}>
+			{({ isActive }) => (
+				<Button
+					onClick={() => {
+						navigate(item.link);
+						onClose?.();
+					}}
+					variant={Boolean(isActive) ? 'solid' : 'ghost'}
+					borderRadius="lg"
+					cursor="pointer"
+					isFullWidth={isMobile}
+					size={isMobile ? 'lg' : 'md'}
+					leftIcon={typeof item.icon === 'string' ? <Text>{item.icon}</Text> : undefined}
+				>
+					{item.name}
+				</Button>
+			)}
+		</NavLink>
 	);
 };
 
@@ -126,7 +130,7 @@ function NavComponent() {
 							<Logo />
 						</chakra.a>
 
-						<HStack spacing={3} display={{ base: 'none', md: 'inline-flex' }}>
+						<HStack pl={4} spacing={3} display={{ base: 'none', md: 'inline-flex' }}>
 							{LinkItems.map((link) => (
 								<NavItem isMobile={false} key={link.name} item={link} />
 							))}
@@ -142,12 +146,12 @@ function NavComponent() {
 	);
 }
 
-export function Navbar({ children }: { children: ReactNode }) {
+export function Navbar() {
 	return (
 		<Box height="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
 			<NavComponent />
 			<Box height="calc(100vh - 72px)" position="relative" overflowY="auto">
-				{children}
+				<Outlet />
 			</Box>
 		</Box>
 	);
