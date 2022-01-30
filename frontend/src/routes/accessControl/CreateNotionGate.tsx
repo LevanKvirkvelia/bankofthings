@@ -14,6 +14,7 @@ import {
 	Link,
 	Text,
 	Textarea,
+	useToast,
 	VStack,
 } from '@chakra-ui/react';
 import md5 from 'md5';
@@ -81,8 +82,16 @@ function CreateAppForm() {
 	const [accessLevel, setAccessLevel] = useState(AccessLevelOptions[0]);
 	const [filter, setFilter] = useState({ filter: { operator: 'and', filters: [] } });
 	const [pageURL, setPageURL] = useState('');
-	const { mutate, isLoading, data, isSuccess } = useCreateGateway('notion');
+	const toast = useToast();
+	const { mutate, error, isLoading, data, isSuccess } = useCreateGateway('notion');
 	const navigator = useNavigate();
+
+	useEffect(() => {
+		(async () => {
+			const respBody = await (error as any)?.response?.json();
+			if (respBody?.error) toast({ description: respBody.error, status: 'error' });
+		})();
+	}, [error]);
 
 	useEffect(() => {
 		if (data && isSuccess) navigator('/gateway');
