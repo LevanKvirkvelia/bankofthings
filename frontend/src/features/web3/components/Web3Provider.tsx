@@ -4,16 +4,7 @@ import { useOnboard } from 'use-onboard';
 import Notify from 'bnc-notify';
 import Moralis from 'moralis';
 import { useLocalStorage } from '../../../hooks/useLocalStorage';
-import {
-	Modal,
-	ModalOverlay,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
-	Button,
-	Text,
-} from '@chakra-ui/react';
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Text } from '@chakra-ui/react';
 
 const serverUrl = 'https://oam0o2ny6nfp.usemoralis.com:2053/server';
 const appId = 't0Nv4m9GahmlrffqRMCCzeWKJdmCzcKrmoUcOpe5';
@@ -97,9 +88,7 @@ export function Web3Provider({ children }: { children?: ReactNode | undefined })
 		async (address) => {
 			if (!web3 || !address) return;
 			const signer = onboard.provider.getSigner();
-			const address2 = await signer.getAddress();
 			const message = 'Bank of Things sign-in message';
-
 			signer
 				.signMessage(message)
 				.then((value) => setSignatures(() => ({ ...signatures, [address]: value })))
@@ -110,7 +99,9 @@ export function Web3Provider({ children }: { children?: ReactNode | undefined })
 
 	useEffect(() => {
 		if (!sign && web3 && onboard.address) {
-			getSignature(onboard.address);
+			setTimeout(() => {
+				getSignature(onboard.address);
+			}, 300);
 		}
 	}, [onboard.address, sign, web3]);
 

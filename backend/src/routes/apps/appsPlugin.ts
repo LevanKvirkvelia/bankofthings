@@ -118,7 +118,7 @@ export default fp(async function (fastify, opts) {
     if (!gate) throw new Error("You do not have access to this gate");
     const appName = gate.appName.toLowerCase();
 
-    const app = Apps[appName];
+    const app = Apps[appName as keyof typeof Apps];
 
     if (!app) {
       res.code(404).send({ error: `Application "${appName}" not found` });
@@ -133,10 +133,13 @@ export default fp(async function (fastify, opts) {
     if (!ajv.validate(app.requestAccessPropsSchema, props))
       throw new Error("Bad props");
 
-    if (!ajv.validate(Type.String({ format: "uuid" }), gateId))
-      throw new Error("Bad gateId");
-
-    const result = await app.requestAccess({ wallet, props, gateId });
+    const result = await app.requestAccess({
+      // @ts-ignore
+      gate,
+      wallet,
+      props,
+    });
+    
     res
       .code(200)
       .cookie("sign", sign, { path: "/" })

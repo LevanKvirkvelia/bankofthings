@@ -34,7 +34,7 @@ function GateProps() {
 	const toast = useToast();
 	const [email, setEmail] = useState('');
 	const { id } = useParams<{ id: string }>();
-	const { data, error, mutate } = useRequestAccess(id || '');
+	const { data, error, mutate, isLoading } = useRequestAccess(id || '');
 
 	useEffect(() => {
 		(async () => {
@@ -55,6 +55,7 @@ function GateProps() {
 			<FormControl>
 				<FormLabel>Email</FormLabel>
 				<Input
+					isDisabled={isLoading}
 					type="email"
 					value={email}
 					onChange={(event) => setEmail(event.target.value)}
@@ -64,8 +65,9 @@ function GateProps() {
 			</FormControl>
 			<Flex mt={2}>
 				<Button
+					isLoading={isLoading}
 					onClick={() => {
-						mutate({ email });
+						if (!isLoading) mutate({ email });
 					}}
 					mt="2"
 					colorScheme="green"
