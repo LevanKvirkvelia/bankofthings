@@ -30,7 +30,7 @@ export function Filters({
 	if (!filterState) return null;
 	return (
 		<>
-			<VStack spacing={1} mb={filterState?.filter?.filters?.length ? 2 : 0} align="flex-start">
+			<VStack spacing={1} mb={filterState?.filter?.filters?.length && !isDisabled ? 2 : 0} align="flex-start">
 				{filterState?.filter.filters.map((_: any, i: number) => {
 					const rowPath = [...path, 'filter', 'filters', i.toString()];
 					return (
