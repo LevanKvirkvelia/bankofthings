@@ -3,6 +3,17 @@ import Web3 from 'web3';
 import { useOnboard } from 'use-onboard';
 import Notify from 'bnc-notify';
 import Moralis from 'moralis';
+import { useLocalStorage } from '../../../hooks/useLocalStorage';
+import {
+	Modal,
+	ModalOverlay,
+	ModalContent,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+	Button,
+	Text,
+} from '@chakra-ui/react';
 
 const serverUrl = 'https://oam0o2ny6nfp.usemoralis.com:2053/server';
 const appId = 't0Nv4m9GahmlrffqRMCCzeWKJdmCzcKrmoUcOpe5';
@@ -55,42 +66,63 @@ export function Web3Provider({ children }: { children?: ReactNode | undefined })
 			darkMode: false,
 			hideBranding: true,
 			dappId: BLOCKNATIVE_KEY,
-			// @ts-ignore
-			networkId: undefined,
+			networkId: 1,
 			walletSelect: {
 				wallets: [
 					{ walletName: 'metamask' },
-					{ walletName: 'gnosis' },
+					// { walletName: 'gnosis' },
 					{
 						walletName: 'walletConnect',
-						infuraKey: 'https://kovan.infura.io/v3/f8d1f60a2c614dd6b1d579e05e85c94b',
+						infuraKey: 'f8d1f60a2c614dd6b1d579e05e85c94b',
 					},
 				],
+			},
+			subscriptions: {
+				wallet: (wallet) => {
+					setWeb3(new Web3(wallet.provider));
+				},
+				address(address) {
+					console.log('subscriptions address', address);
+				},
 			},
 		},
 	});
 
-	const [sign, setSign] = useState<string>(() => localStorage.sign);
+	useEffect(() => {}, [onboard.wallet]);
+
+	const [signatures, setSignatures] = useLocalStorage<{ [address: string]: string }>('signatures', {});
+	const sign = signatures[onboard.address];
+
+	const getSignature = useCallback(
+		async (address) => {
+			if (!web3 || !address) return;
+			const signer = onboard.provider.getSigner();
+			const address2 = await signer.getAddress();
+			const message = 'Bank of Things sign-in message';
+
+			signer
+				.signMessage(message)
+				.then((value) => setSignatures(() => ({ ...signatures, [address]: value })))
+				.catch(console.log);
+		},
+		[web3, onboard],
+	);
 
 	useEffect(() => {
 		if (!sign && web3 && onboard.address) {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			web3.eth.personal.sign('Bank of Things sign-in message', onboard.address).then((value) => {
-				setSign(value);
-				localStorage.sign = value;
-			});
+			getSignature(onboard.address);
 		}
 	}, [onboard.address, sign, web3]);
 
-	const provider = onboard?.wallet?.provider;
 	useEffect(() => {
-		if (provider) setWeb3(new Web3(provider));
-	}, [provider]);
+		if (onboard.isWalletSelected && !onboard.address) {
+			onboard.wallet?.connect?.();
+		}
+	}, [onboard.isWalletSelected, onboard.wallet, onboard.address]);
 
 	const disconnectWallet = useCallback(() => {
 		onboard.disconnectWallet();
-		localStorage.removeItem('sign');
+		setSignatures({});
 	}, [onboard]);
 
 	const value = useMemo(
@@ -104,7 +136,29 @@ export function Web3Provider({ children }: { children?: ReactNode | undefined })
 		[web3, sign, onboard, notify, disconnectWallet],
 	);
 
-	return <Web3Context.Provider value={value}>{children}</Web3Context.Provider>;
+	return (
+		<>
+			<Modal isOpen={!sign && !!onboard.address} onClose={() => {}}>
+				<ModalOverlay />
+				<ModalContent>
+					<ModalHeader>Please accept the signature request</ModalHeader>
+					<ModalBody>
+						<Text>
+							Sign the message in your wallet to verify you have access to it and we'll log you in. It won't cost you
+							Ether.
+						</Text>
+					</ModalBody>
+					<ModalFooter>
+						<Button onClick={() => getSignature(onboard.address)}>Try again</Button>
+						<Button onClick={() => disconnectWallet()} variant="ghost">
+							Disconnect
+						</Button>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
+			<Web3Context.Provider value={value}>{children}</Web3Context.Provider>
+		</>
+	);
 }
 
 export function useWeb3() {

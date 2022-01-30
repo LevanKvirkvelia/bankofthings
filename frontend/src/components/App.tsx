@@ -15,13 +15,13 @@ const queryClient = new QueryClient({
 export function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<Web3Provider>
-				<ChakraProvider>
+			<ChakraProvider>
+				<Web3Provider>
 					<div className="App">
 						<AppRouters />
 					</div>
-				</ChakraProvider>
-			</Web3Provider>
+				</Web3Provider>
+			</ChakraProvider>
 		</QueryClientProvider>
 	);
 }
