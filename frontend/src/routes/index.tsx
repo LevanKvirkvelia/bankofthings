@@ -1,11 +1,20 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import { WalletRoute } from './wallet/WalletRoute';
 import { Navbar } from '../features/sidebar/components/Navbar';
 import { AddDomainRoute } from './AddDomainRoute';
 import { AccessControlRoute } from './accessControl/AccessControlRoute';
 import { CreateNotionGate } from './accessControl/CreateNotionGate';
-import { GateRoute } from './gate/GateRoute';
 import { AppListRoute } from './accessControl/AppListRoute';
+import { useEffect } from 'react';
+import { GateRoute } from './gate/GateRoute';
+
+function RedirectToGate() {
+	const navigate = useNavigate();
+	useEffect(() => {
+		navigate('/gateway');
+	}, [navigate]);
+	return null;
+}
 
 export function AppRouters() {
 	return (
@@ -15,6 +24,7 @@ export function AppRouters() {
 					<Route path=":id" element={<GateRoute />} />
 				</Route>
 				<Route path="/" element={<Navbar />}>
+					<Route index element={<RedirectToGate />} />
 					<Route path="/gateway" element={<AccessControlRoute />} />
 					<Route path="/gateway/create" element={<AppListRoute />} />
 					<Route path="/gateway/create/notion" element={<CreateNotionGate />} />
