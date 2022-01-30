@@ -6,7 +6,7 @@ import { ethers } from "ethers";
 import { ObjectId } from "mongodb";
 import { Filter } from "../../libs/accessValidator/filters/Filter";
 import { Apps, Gate, gatesCollection, getGateDocument } from "../../apps";
-import { evalFilter } from "libs/accessValidator/filters/evalFilter";
+import { evalFilter } from "../../libs/accessValidator/filters/evalFilter";
 
 const ajv = addFormats(new Ajv({}), [
   "date-time",
