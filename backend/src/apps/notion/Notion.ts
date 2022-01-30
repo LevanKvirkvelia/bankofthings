@@ -42,6 +42,7 @@ const requestAccessPropsSchema = Type.Object({
 });
 
 export const Notion: IApp<
+  GateAppContext,
   typeof initializePropsSchema,
   typeof requestAccessPropsSchema
 > = {
@@ -102,8 +103,7 @@ export const Notion: IApp<
     );
   },
   requestAccessPropsSchema,
-  requestAccess: async ({ gateId, wallet, props }) => {
-    const gate = await getGateDocument<GateAppContext>(gateId);
+  requestAccess: async ({ gate, wallet, props }) => {
     if (!gate) throw new Error("You do not have access to this gate");
 
     const hasAccess = await evalFilter(gate.filter, { user_address: wallet });
@@ -112,8 +112,13 @@ export const Notion: IApp<
     const { permission, pageId, spaceId } = gate.appContext;
     const { email } = props;
 
-    await gateLogsCollection.insertOne({ gateId, wallet, props, active: true });
-    await Notion.stopAccess({ gateId, wallet });
+    await gateLogsCollection.insertOne({
+      gateId: gate.id,
+      wallet,
+      props,
+      active: true,
+    });
+    await Notion.stopAccess({ gateId: gate.id, wallet });
     await notionUpdatePermission(notionAPI, {
       permission,
       pageId,

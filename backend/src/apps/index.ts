@@ -3,15 +3,18 @@ import { Static, TSchema, Type } from "@sinclair/typebox";
 import { Filter } from "../libs/accessValidator/filters/Filter";
 import { Notion } from "./notion/Notion";
 
-export const Gate = Type.Object({
-  id: Type.String(),
-  filter: Filter as typeof Filter,
-  owner: Type.String(),
-  appName: Type.String(),
-  title: Type.String(),
-  appContext: Type.Any(),
-  active: Type.Boolean(),
-});
+export const Gate = Type.Object(
+  {
+    id: Type.String(),
+    filter: Filter as typeof Filter,
+    owner: Type.String(),
+    appName: Type.String(),
+    title: Type.String(),
+    appContext: Type.Any(),
+    active: Type.Boolean(),
+  },
+  { additionalProperties: false }
+);
 
 export const gatesCollection = mongoDB.collection<Static<typeof Gate>>("gates");
 gatesCollection.createIndex({ id: 1 }, { unique: true });
@@ -28,14 +31,24 @@ export const gateLogsCollection =
   mongoDB.collection<Static<typeof GateLogs>>("gateLogs");
 gateLogsCollection.createIndex({ wallet: 1, gateId: 1, active: 1 });
 
-export async function getGateDocument<AppContext>(gateId: string) {
-  const gate = await gatesCollection.findOne({ id: gateId });
+export async function getGateDocument<AppContext>(
+  gateId: string,
+  projection: (keyof Static<typeof Gate>)[] = []
+) {
+  const gate = await gatesCollection.findOne(
+    { id: gateId },
+    { projection: Object.fromEntries(projection.map((key) => [key, 1])) }
+  );
   return gate as Omit<Static<typeof Gate>, "appContext"> & {
     appContext: AppContext;
   };
 }
 
-export interface IApp<InitProps extends TSchema, ActionProps extends TSchema> {
+export interface IApp<
+  GateAppContext,
+  InitProps extends TSchema,
+  ActionProps extends TSchema
+> {
   initializePropsSchema: InitProps;
   initialize: (props: {
     wallet: string;
@@ -45,7 +58,9 @@ export interface IApp<InitProps extends TSchema, ActionProps extends TSchema> {
   stopAccess: (props: { gateId: string; wallet: string }) => Promise<void>;
   requestAccessPropsSchema: ActionProps;
   requestAccess: (props: {
-    gateId: string;
+    gate: Omit<Static<typeof Gate>, "appContext"> & {
+      appContext: GateAppContext;
+    };
     wallet: string;
     props: Static<ActionProps>;
   }) => Promise<void | { redirect: string }>;

@@ -5,7 +5,8 @@ import { Static, Type } from "@sinclair/typebox";
 import { ethers } from "ethers";
 import { ObjectId } from "mongodb";
 import { Filter } from "../../libs/accessValidator/filters/Filter";
-import { Apps, gatesCollection } from "../../apps";
+import { Apps, Gate, gatesCollection, getGateDocument } from "../../apps";
+import { evalFilter } from "libs/accessValidator/filters/evalFilter";
 
 const ajv = addFormats(new Ajv({}), [
   "date-time",
@@ -28,15 +29,14 @@ const ajv = addFormats(new Ajv({}), [
 
 export default fp(async function (fastify, opts) {
   fastify.post<{
-    Params: { appName: string };
     Body: {
+      appName: string;
       props: any;
       filter: Static<typeof Filter>;
       sign: string;
     };
-  }>("/apps/:appName/init", async (req, res) => {
-    const { props, filter, sign } = req.body;
-    const { appName } = req.params;
+  }>("/apps/init", async (req, res) => {
+    const { props, appName, filter, sign } = req.body;
     const app = Apps[appName.toLowerCase()];
 
     if (!app) {
@@ -58,22 +58,70 @@ export default fp(async function (fastify, opts) {
     return app.initialize({ wallet, props, filter });
   });
 
+  const EDITABLE_PROPS_SCHEMA = Type.Partial(
+    Type.Pick(Gate, ["active", "title", "filter"]),
+    {
+      additionalProperties: false,
+    }
+  );
+
   fastify.post<{
-    Params: { appName: string };
+    Body: {
+      gateId: string;
+      value: any;
+      sign: string;
+    };
+  }>("/apps/update", async (req, res) => {
+    const { value, sign, gateId } = req.body;
+
+    const gate = await getGateDocument(gateId, ["appName"]);
+    if (!gate) throw new Error("You do not have access to this gate");
+    const appName = gate.appName.toLowerCase();
+
+    const app = Apps[appName];
+
+    if (!app) {
+      res.code(404).send({ error: `Application "${appName}" not found` });
+      return;
+    }
+
+    const wallet = ethers.utils.verifyMessage(
+      "Bank of Things sign-in message",
+      sign
+    );
+
+    if (!ajv.validate(EDITABLE_PROPS_SCHEMA, value))
+      throw new Error("Bad value");
+
+    const updateResult = await gatesCollection.updateOne(
+      { id: gateId, owner: wallet },
+      { $set: value }
+    );
+    return !!updateResult.matchedCount
+      ? { ok: true }
+      : {
+          ok: false,
+          error: "Gate not found or you dont have permission to the gate",
+        };
+  });
+
+  fastify.post<{
     Body: {
       gateId: string;
       props: any;
       sign: string;
     };
-  }>("/apps/:appName/requestAccess", async (req, res) => {
+  }>("/apps/requestAccess", async (req, res) => {
     const { props, gateId, sign } = req.body;
-    const { appName } = req.params;
-    const app = Apps[appName.toLowerCase()];
+
+    const gate = await getGateDocument(gateId);
+    if (!gate) throw new Error("You do not have access to this gate");
+    const appName = gate.appName.toLowerCase();
+
+    const app = Apps[appName];
 
     if (!app) {
-      res
-        .code(404)
-        .send({ error: `Application "${appName.toLowerCase()}" not found` });
+      res.code(404).send({ error: `Application "${appName}" not found` });
       return;
     }
 
@@ -94,9 +142,53 @@ export default fp(async function (fastify, opts) {
       .cookie("sign", sign, { path: "/" })
       .send({ ok: true, ...result });
   });
+  fastify.post<{
+    Body: {
+      gateId?: string;
+      sign?: string;
+    };
+  }>("/apps/info", async (req, res) => {
+    const { gateId, sign } = req.body;
+
+    const wallet = sign
+      ? ethers.utils.verifyMessage("Bank of Things sign-in message", sign)
+      : null;
+
+    const gate = !!gateId && (await getGateDocument(gateId, ["appName"]));
+
+    return { gate };
+  });
 
   fastify.post<{
-    Params: { appName: string };
+    Body: {
+      gateId?: string;
+      userAddress?: string;
+      filter?: any;
+      sign?: string;
+    };
+  }>("/apps/validate", async (req, res) => {
+    const { filter: passedFilter, gateId, sign, userAddress } = req.body;
+
+    const gate =
+      !!gateId && (await getGateDocument(gateId, ["filter", "appName"]));
+    if (!gate && !passedFilter) throw new Error("Please pass a valid body");
+
+    const filter = gate.filter || passedFilter;
+
+    const wallet = sign
+      ? ethers.utils.verifyMessage("Bank of Things sign-in message", sign)
+      : null;
+
+    if (!userAddress && !wallet)
+      throw new Error("Pass a valid sign or userAddress");
+
+    const hasAccess = await evalFilter(filter, {
+      user_address: wallet || userAddress,
+    });
+    return { hasAccess, gate };
+  });
+
+  fastify.post<{
     Body: { sign: string };
     Querystring: {
       cursor: string;
