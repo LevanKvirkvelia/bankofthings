@@ -145,70 +145,72 @@ export function AccessControlRoute() {
 	const { isWalletSelected } = useWeb3();
 
 	return (
-		<Center flexDirection="column">
-			<Box mt="4" maxW="container.lg">
-				<FlexWithHiddenScroll>
-					<SimpleGrid
-						minChildWidth="250px"
-						minW={`${250 * APPS.length + 15 * (APPS.length - 1)}px`}
-						columns={APPS.length}
-						spacing={'15px'}
-					>
-						{APPS.map((app) => (
-							<SmallAppCard key={app.id} app={app} />
-						))}
-					</SimpleGrid>
-				</FlexWithHiddenScroll>
-			</Box>
-			<Box mt="4" width="100%" maxW="container.lg" backgroundColor="white">
-				<Table variant="simple">
-					<Thead>
-						<Tr>
-							<Th>App</Th>
-							<Th>Title</Th>
-							<Th>Gateway link</Th>
-							<Th>Access rules</Th>
-							<Th>Active</Th>
-						</Tr>
-					</Thead>
-					<Tbody>
-						{data?.list
-							? data?.list.map((row: any) => {
-									const gateLink = `https://app.bankofthings.com/gate/${row.id}`;
-									return (
-										<Tr key={row._id}>
-											<Td>
-												<HStack spacing={1}>
-													<Image src={APPS_MAP[row.appName].logo} height="20px" />
-													<div>{APPS_MAP[row.appName].title}</div>
-												</HStack>
-											</Td>
-											<Td>{row.title}</Td>
-											<Td>
-												<HStack spacing={1}>
-													<Input minW="200" maxW="300" readOnly value={gateLink} />
-													<IconButton
-														aria-label="Copy to clipboard"
-														icon={<FiLink />}
-														onClick={() => {
-															copy(gateLink);
-														}}
-													/>
-												</HStack>
-											</Td>
-											<Td>
-												<FiltersPopover isDisabled filter={row.filter} />
-											</Td>
-											<Td>{row.active ? <Badge colorScheme="green">Active</Badge> : <Badge>Disabled</Badge>}</Td>
-										</Tr>
-									);
-							  })
-							: null}
-					</Tbody>
-				</Table>
-				{isWalletSelected && !isLoading && !data?.list?.length ? <EmptyTable /> : null}
-				{!isWalletSelected ? <ConnectWallet /> : null}
-			</Box>
+		<Center maxW="100%" px={2}>
+			<Flex flexDirection="column" maxW="100%" w="container.lg">
+				<Box mt="4" w="100%">
+					<FlexWithHiddenScroll>
+						<SimpleGrid
+							minChildWidth="250px"
+							minW={`${250 * APPS.length + 15 * (APPS.length - 1)}px`}
+							columns={APPS.length}
+							spacing={'15px'}
+						>
+							{APPS.map((app) => (
+								<SmallAppCard key={app.id} app={app} />
+							))}
+						</SimpleGrid>
+					</FlexWithHiddenScroll>
+				</Box>
+				<Box mt="4" width="100%" maxW="100%" w="container.lg" overflowX="scroll" backgroundColor="white">
+					<Table variant="simple">
+						<Thead>
+							<Tr>
+								<Th>App</Th>
+								<Th>Title</Th>
+								<Th>Gateway link</Th>
+								<Th>Access rules</Th>
+								<Th>Active</Th>
+							</Tr>
+						</Thead>
+						<Tbody>
+							{data?.list
+								? data?.list.map((row: any) => {
+										const gateLink = `https://app.bankofthings.com/gate/${row.id}`;
+										return (
+											<Tr key={row._id}>
+												<Td>
+													<HStack spacing={1}>
+														<Image src={APPS_MAP[row.appName].logo} height="20px" />
+														<div>{APPS_MAP[row.appName].title}</div>
+													</HStack>
+												</Td>
+												<Td>{row.title}</Td>
+												<Td>
+													<HStack spacing={1}>
+														<Input minW="200" maxW="300" readOnly value={gateLink} />
+														<IconButton
+															aria-label="Copy to clipboard"
+															icon={<FiLink />}
+															onClick={() => {
+																copy(gateLink);
+															}}
+														/>
+													</HStack>
+												</Td>
+												<Td>
+													<FiltersPopover isDisabled filter={row.filter} />
+												</Td>
+												<Td>{row.active ? <Badge colorScheme="green">Active</Badge> : <Badge>Disabled</Badge>}</Td>
+											</Tr>
+										);
+								  })
+								: null}
+						</Tbody>
+					</Table>
+					{isWalletSelected && !isLoading && !data?.list?.length ? <EmptyTable /> : null}
+					{!isWalletSelected ? <ConnectWallet /> : null}
+				</Box>
+			</Flex>
 		</Center>
 	);
 }
