@@ -45,14 +45,18 @@ function CreateAppDescription() {
 	const md5Token = useMemo(() => md5(`${address}:bankofthings`.toLowerCase()), [address]);
 	return (
 		<>
-			<HeadingList number={1} text="Share admin access with team@bankofthings.com" />
+			<HeadingList number={1} text={`Grant "Full Access" to the page to our bot team@bankofthings.com`} />
 			<Text mx="6">
 				<Alert my="2" rounded="base" status="warning">
 					<AlertIcon />
 					<Box>
-						At the moment, Notion does not have an API to manage the share feature, so we use reverse engineered API.
+						Grant access only to the <b>page</b> you want to share with the community. No need to give access to the entire
+						workspace.
 					</Box>
 				</Alert>
+				{/* <Text>
+					At the moment, Notion does not have an API to manage the share feature, so we use reverse engineered API.
+				</Text> */}
 				<Box>
 					<Image rounded="lg" src="https://bankofthings.nyc3.cdn.digitaloceanspaces.com/notionShare1.png" />
 				</Box>
@@ -141,8 +145,6 @@ function CreateAppForm() {
 }
 
 export function CreateNotionGate() {
-	const [link, setLink] = useState('');
-
 	return (
 		<Center>
 			<Box width="100%" maxW="container.md" m="4" p="8" bg="white" rounded="xl">

@@ -1,13 +1,16 @@
+import { CheckCircleIcon } from '@chakra-ui/icons';
 import {
 	Badge,
 	Box,
 	Button,
 	Center,
 	Flex,
+	Heading,
 	HStack,
 	IconButton,
 	Image,
 	Input,
+	Text,
 	Popover,
 	PopoverBody,
 	PopoverContent,
@@ -19,14 +22,18 @@ import {
 	Th,
 	Thead,
 	Tr,
+	SimpleGrid,
 } from '@chakra-ui/react';
+import styled from '@emotion/styled';
 import copy from 'copy-to-clipboard';
 import { FaCopy } from 'react-icons/fa';
-import { FiCopy, FiLink } from 'react-icons/fi';
+import { FiCopy, FiInbox, FiLink } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useAccessControlList } from '../../features/accessControl/hooks/useAccessControlList';
 import { Filters } from '../../features/filters/components/Filters';
-import { APPS_MAP } from './AppListRoute';
+import { WalletButton } from '../../features/sidebar/components/WalletButton';
+import { useWeb3 } from '../../features/web3/components/Web3Provider';
+import { APP, AppCard, APPS, APPS_MAP } from './AppListRoute';
 
 function FiltersPopover({ filter, isDisabled }: { filter: any; isDisabled: boolean }) {
 	const len = filter?.filter?.filters?.length || 1;
@@ -46,17 +53,113 @@ function FiltersPopover({ filter, isDisabled }: { filter: any; isDisabled: boole
 	);
 }
 
-export function AccessControlRoute() {
-	const { data } = useAccessControlList();
+function EmptyTable() {
 	const navigate = useNavigate();
 	return (
-		<Center flexDirection="column">
-			<Flex mt="4" width="100%" maxW="container.lg">
-				<Spacer />
-				<Button colorScheme="blue" onClick={() => navigate('create')}>
+		<Flex direction="column" textAlign="center" alignItems="center" py={10} px={6}>
+			<Flex rounded="full" justifyContent="center" alignItems="center" fontSize={50}>
+				🗃
+			</Flex>
+
+			<Heading maxW="container.md" as="h2" size="xl" mt={2} mb={2}>
+				You haven't created a gateway yet
+			</Heading>
+			<Text maxW="container.md" color={'gray.500'}>
+				Create token gate access to Notion, GitHub, Google Docs, and more!
+			</Text>
+			<Button
+				mt={8}
+				onClick={() => {
+					navigate('/gateway/create');
+				}}
+			>
+				Create gateway
+			</Button>
+		</Flex>
+	);
+}
+
+function ConnectWallet() {
+	return (
+		<Flex direction="column" textAlign="center" alignItems="center" py={10} px={6}>
+			<Flex rounded="full" justifyContent="center" alignItems="center" fontSize={50}>
+				🦊
+			</Flex>
+
+			<Heading maxW="container.md" as="h2" size="xl" mt={2} mb={2}>
+				Connect wallet to create your first gateway
+			</Heading>
+			{/* <Text maxW="container.md" color={'gray.500'}>
+				Create token gate access to Notion, GitHub, Google Docs, and more!
+			</Text> */}
+			<Box mt={8}>
+				<WalletButton size="lg" />
+			</Box>
+		</Flex>
+	);
+}
+
+export function SmallAppCard({ app }: { app: APP }) {
+	const navigate = useNavigate();
+
+	return (
+		<Box boxShadow="sm" bg="white" my="1" p="4" rounded="md">
+			<Image src={app.logo} height={'35px'} />
+			<Heading mt={4} as="h2" size="md">
+				{app.title}
+			</Heading>
+			<Text noOfLines={2} mt={1} mb={2} title={app.description}>
+				{app.description}
+			</Text>
+			{app.active ? (
+				<Button
+					size="sm"
+					onClick={() => {
+						navigate(`/gateway/create/${app.id}`);
+					}}
+				>
 					Create Gateway
 				</Button>
-			</Flex>
+			) : (
+				<Button size="sm" disabled>
+					Coming soon
+				</Button>
+			)}
+		</Box>
+	);
+}
+
+const FlexWithHiddenScroll = styled.div`
+	display: flex;
+	overflow-x: auto;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+`;
+
+export function AccessControlRoute() {
+	const { data, isLoading } = useAccessControlList();
+	const { isWalletSelected } = useWeb3();
+
+	return (
+		<Center flexDirection="column">
+			<Box mt="4" maxW="container.lg">
+				<FlexWithHiddenScroll>
+					<SimpleGrid
+						minChildWidth="250px"
+						minW={`${250 * APPS.length + 15 * (APPS.length - 1)}px`}
+						columns={APPS.length}
+						spacing={'15px'}
+					>
+						{APPS.map((app) => (
+							<SmallAppCard key={app.id} app={app} />
+						))}
+					</SimpleGrid>
+				</FlexWithHiddenScroll>
+			</Box>
 			<Box mt="4" width="100%" maxW="container.lg" backgroundColor="white">
 				<Table variant="simple">
 					<Thead>
@@ -103,6 +206,8 @@ export function AccessControlRoute() {
 							: null}
 					</Tbody>
 				</Table>
+				{isWalletSelected && !isLoading && !data?.list?.length ? <EmptyTable /> : null}
+				{!isWalletSelected ? <ConnectWallet /> : null}
 			</Box>
 		</Center>
 	);

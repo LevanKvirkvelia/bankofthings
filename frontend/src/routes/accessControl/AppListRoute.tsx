@@ -1,7 +1,7 @@
 import { Box, Button, Center, Heading, HStack, Image, SimpleGrid, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-type APP = {
+export type APP = {
 	id: string;
 	logo: string;
 	title: string;
@@ -79,7 +79,7 @@ export function AppCard({ app }: { app: APP }) {
 							navigate(app.id);
 						}}
 					>
-						Create gate
+						Create Gateway
 					</Button>
 				) : (
 					<>
