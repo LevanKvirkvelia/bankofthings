@@ -4,7 +4,18 @@ import { useOnboard } from 'use-onboard';
 import Notify from 'bnc-notify';
 import Moralis from 'moralis';
 import { useLocalStorage } from '../../../hooks/useLocalStorage';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Text } from '@chakra-ui/react';
+import {
+	Modal,
+	ModalOverlay,
+	ModalContent,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+	Button,
+	Text,
+	usePrevious,
+} from '@chakra-ui/react';
+import amplitude from 'amplitude-js';
 
 const serverUrl = 'https://oam0o2ny6nfp.usemoralis.com:2053/server';
 const appId = 't0Nv4m9GahmlrffqRMCCzeWKJdmCzcKrmoUcOpe5';
@@ -91,11 +102,32 @@ export function Web3Provider({ children }: { children?: ReactNode | undefined })
 			const message = 'Bank of Things sign-in message';
 			signer
 				.signMessage(message)
-				.then((value) => setSignatures(() => ({ ...signatures, [address]: value })))
+				.then((value) => {
+					setSignatures(() => ({ ...signatures, [address]: value }));
+					amplitude.getInstance().logEvent('User_Wallet_Signature');
+				})
 				.catch(console.log);
 		},
 		[web3, onboard],
 	);
+
+	const prevAddress = usePrevious(onboard?.address);
+
+	useEffect(() => {
+		if (prevAddress && !onboard.address) {
+			amplitude.getInstance().logEvent('User_Wallet_Disconnected');
+			amplitude.getInstance().setUserId(null);
+		}
+		if (prevAddress !== onboard.address && onboard.address) {
+			amplitude.getInstance().setUserId(onboard.address);
+			amplitude.getInstance().logEvent('User_Wallet_Connected', { walletName: onboard.wallet.name });
+		}
+		if (!sign && web3 && onboard.address) {
+			setTimeout(() => {
+				getSignature(onboard.address);
+			}, 300);
+		}
+	}, [onboard.address, sign]);
 
 	useEffect(() => {
 		if (!sign && web3 && onboard.address) {
