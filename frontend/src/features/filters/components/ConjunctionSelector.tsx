@@ -5,8 +5,8 @@ import { ChakraSelect } from './ChakraSelect';
 import { useFilterContext } from '../hooks/useFilterContext';
 
 const CONJUNCTION_OPTIONS = [
-	{ value: 'and', label: 'And' },
-	{ value: 'or', label: 'Or' },
+	{ value: 'and', label: 'and' },
+	{ value: 'or', label: 'or' },
 ];
 
 export function ConjunctionSelector({ i }: { i: number }) {
@@ -26,7 +26,7 @@ export function ConjunctionSelector({ i }: { i: number }) {
 	return (
 		<Box minW={74} alignItems="flex-end" textAlign="right">
 			{i === 0 ? <span>Where</span> : null}
-			{i >= 2 ? <span>{parent.operator === 'or' ? 'Or' : 'And'}</span> : null}
+			{i >= 2 ? <span>{parent.operator === 'or' ? 'or' : 'and'}</span> : null}
 			{i === 1 ? <ChakraSelect isDisabled={isDisabled} value={parent.operator} onChange={setOperator} options={CONJUNCTION_OPTIONS} /> : null}
 		</Box>
 	);

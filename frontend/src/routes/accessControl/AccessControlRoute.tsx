@@ -29,6 +29,7 @@ import copy from 'copy-to-clipboard';
 import { FaCopy } from 'react-icons/fa';
 import { FiCopy, FiInbox, FiLink } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import { FastImage } from '../../components/FastImage';
 import { useAccessControlList } from '../../features/accessControl/hooks/useAccessControlList';
 import { Filters } from '../../features/filters/components/Filters';
 import { WalletButton } from '../../features/sidebar/components/WalletButton';
@@ -104,7 +105,7 @@ export function SmallAppCard({ app }: { app: APP }) {
 
 	return (
 		<Box boxShadow="sm" bg="white" my="1" p="4" rounded="md">
-			<Image src={app.logo} height={'35px'} />
+			<FastImage src={app.logo} cdn={{ h: 35 }} />
 			<Heading mt={4} as="h2" size="md">
 				{app.title}
 			</Heading>
