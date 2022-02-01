@@ -9,6 +9,7 @@ import { ReactNode, useEffect } from 'react';
 import { GateRoute } from './gate/GateRoute';
 import { useRouterEvents } from '../features/analytics/hooks/useRouterEvents';
 import amplitude from 'amplitude-js';
+import { PlaygroundRoute } from './playground/PlaygroundRoute';
 
 function RedirectToGate() {
 	const navigate = useNavigate();
@@ -34,6 +35,7 @@ export function AppRouters() {
 					</Route>
 					<Route path="/" element={<Navbar />}>
 						<Route index element={<RedirectToGate />} />
+						<Route path="/playground" element={<PlaygroundRoute />} />
 						<Route path="/gateway" element={<AccessControlRoute />} />
 						<Route path="/gateway/create" element={<AppListRoute />} />
 						<Route path="/gateway/create/notion" element={<CreateNotionGate />} />

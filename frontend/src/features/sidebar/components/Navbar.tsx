@@ -30,6 +30,7 @@ interface LinkItemProps {
 
 const LinkItems: Array<LinkItemProps> = [
 	{ name: 'Gateways', link: '/gateway', icon: '🎫' },
+	{ name: 'Playground', link: '/playground', icon: '🧸' },
 	// { name: 'Ownership', link: '/ownership', icon: '👛' },
 	// { name: 'My Links', link: '/links', icon: '🔗' },
 	// { name: 'Add domain', link: '/addDomain', icon: '➕' },
