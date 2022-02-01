@@ -7,6 +7,8 @@ import objectPath from 'object-path';
 import { NetworkSelector } from './NetworkSelector';
 import { ContractAddressInput } from './ContractAddressInput';
 import { useFilterContext } from '../../hooks/useFilterContext';
+import { useTokenMetadata } from '../../hooks/useTokenMetadata';
+import { TokenMetadata } from './TokenMetadata';
 
 const PROPERTY_OPTIONS = [
 	{ value: 'eth_ERC20Balance', label: 'Token balance' },
@@ -49,12 +51,20 @@ export function PropertySelector() {
 
 	const PropertySetupComponent =
 		PropertyParamsComponents[selectedOption?.value as keyof typeof PropertyParamsComponents];
-
+	const { contractAddress, chain } = filter.property.parameters;
+	const { data: metadata } = useTokenMetadata(contractAddress, chain);
+	console.log({ contractAddress, chain, metadata });
 	return (
 		<Popover isLazy>
 			<PopoverTrigger>
 				<Button size="sm" variant="outline" rightIcon={<FaCaretDown />}>
-					{selectedOption.label}
+					{selectedOption.value === 'eth_ERC20Balance' ? (
+						<>
+							<TokenMetadata contractAddress={contractAddress} chain={chain} onEmptyChildren="Token" />
+							{" balance"}
+						</>
+					) : null}
+					{selectedOption.value !== 'eth_ERC20Balance' && selectedOption.label}
 				</Button>
 			</PopoverTrigger>
 

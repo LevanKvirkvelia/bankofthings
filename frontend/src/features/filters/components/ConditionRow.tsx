@@ -18,7 +18,7 @@ export function ConditionRow({ i }: {  i: number }) {
 
 			<NumberInput
 				size="sm"
-				maxW={150}
+				maxW={100}
 				isDisabled={isDisabled}
 				onChange={(value) => {
 					if (value.toLowerCase().includes('e') || value.split('.').length > 2 || value.startsWith('.')) return;
@@ -29,7 +29,7 @@ export function ConditionRow({ i }: {  i: number }) {
 				}}
 				value={filter.filter.value}
 			>
-				<NumberInputField rounded="md" placeholder="0.0069" />
+				<NumberInputField paddingInline={2} rounded="md" placeholder="0.0069" />
 			</NumberInput>
 			<Spacer />
 			<DeleteConditionButton i={i} />
