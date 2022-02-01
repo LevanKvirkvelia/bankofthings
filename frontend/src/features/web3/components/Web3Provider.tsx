@@ -122,11 +122,6 @@ export function Web3Provider({ children }: { children?: ReactNode | undefined })
 			amplitude.getInstance().setUserId(onboard.address);
 			amplitude.getInstance().logEvent('User_Wallet_Connected', { walletName: onboard.wallet.name });
 		}
-		if (!sign && web3 && onboard.address) {
-			setTimeout(() => {
-				getSignature(onboard.address);
-			}, 300);
-		}
 	}, [onboard.address, sign]);
 
 	useEffect(() => {
