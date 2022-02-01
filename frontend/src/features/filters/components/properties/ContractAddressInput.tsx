@@ -1,19 +1,10 @@
-import {
-	Avatar,
-	FormControl,
-	FormLabel,
-	Input,
-	InputGroup,
-	InputLeftAddon,
-	InputLeftElement,
-	Text,
-} from '@chakra-ui/react';
+import { FormControl, FormLabel, Input, InputGroup, InputLeftAddon } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import objectPath from 'object-path';
 import { useFilterContext } from '../../hooks/useFilterContext';
 import { validateEthAddress } from '../../../../libs/validateEthAddress';
-import { useTokenMetadata } from '../../hooks/useTokenMetadata';
-import { TokenMetadata } from './TokenMetadata';
+import { TokenMetadata } from '../metadata/TokenMetadata';
+import { NFTMetadata } from '../metadata/NFTMetadata';
 
 export function ContractAddressInput() {
 	const { setFilterState, filter, path, isDisabled } = useFilterContext();
@@ -28,7 +19,16 @@ export function ContractAddressInput() {
 				<InputLeftAddon
 					paddingInline={2}
 					pointerEvents="none"
-					children={<TokenMetadata contractAddress={contractAddress} chain={chain} />}
+					children={
+						<>
+							{filter.property.method === 'eth_ERC20Balance' && (
+								<TokenMetadata contractAddress={contractAddress} chain={chain} />
+							)}
+							{filter.property.method === 'eth_NFTBalance' && (
+								<NFTMetadata contractAddress={contractAddress} chain={chain} />
+							)}
+						</>
+					}
 				/>
 				<Input
 					isDisabled={isDisabled}

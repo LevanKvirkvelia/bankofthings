@@ -8,7 +8,10 @@ import { NetworkSelector } from './NetworkSelector';
 import { ContractAddressInput } from './ContractAddressInput';
 import { useFilterContext } from '../../hooks/useFilterContext';
 import { useTokenMetadata } from '../../hooks/useTokenMetadata';
-import { TokenMetadata } from './TokenMetadata';
+import { TokenMetadata } from '../metadata/TokenMetadata';
+import { NFTMetadata } from '../metadata/NFTMetadata';
+import { NativeTokenMetadata } from '../metadata/NativeTokenMetadata';
+import { ChakraSelect } from '../ChakraSelect';
 
 const PROPERTY_OPTIONS = [
 	{ value: 'eth_ERC20Balance', label: 'Token balance' },
@@ -41,48 +44,52 @@ const PropertyParamsComponents = {
 export function PropertySelector() {
 	const { setFilterState, path, filter, isDisabled } = useFilterContext();
 
-	const selectedOption = useMemo(
-		() => ({
-			value: filter.property.method,
-			label: PROPERTY_OPTIONS.find((l) => l.value === filter.property.method)?.label || filter.property.method,
-		}),
-		[filter.property.method],
-	);
-
-	const PropertySetupComponent =
-		PropertyParamsComponents[selectedOption?.value as keyof typeof PropertyParamsComponents];
+	const method = filter.property.method;
+	const PropertySetupComponent = PropertyParamsComponents[method as keyof typeof PropertyParamsComponents];
 	const { contractAddress, chain } = filter.property.parameters;
-	const { data: metadata } = useTokenMetadata(contractAddress, chain);
-	console.log({ contractAddress, chain, metadata });
+
 	return (
 		<Popover isLazy>
 			<PopoverTrigger>
 				<Button size="sm" variant="outline" rightIcon={<FaCaretDown />}>
-					{selectedOption.value === 'eth_ERC20Balance' ? (
+					{method === 'eth_nativeBalance' ? (
 						<>
-							<TokenMetadata contractAddress={contractAddress} chain={chain} onEmptyChildren="Token" />
-							{" balance"}
+							<NativeTokenMetadata chain={chain} />
+							{' balance'}
 						</>
 					) : null}
-					{selectedOption.value !== 'eth_ERC20Balance' && selectedOption.label}
+					{method === 'eth_ERC20Balance' ? (
+						<>
+							<TokenMetadata contractAddress={contractAddress} chain={chain} onEmptyChildren="Token" />
+							{' balance'}
+						</>
+					) : null}
+					{method === 'eth_NFTBalance' ? (
+						<>
+							{'NFT '}
+							<NFTMetadata contractAddress={contractAddress} chain={chain} onEmptyChildren="Token" />
+							{' balance'}
+						</>
+					) : null}
 				</Button>
 			</PopoverTrigger>
 
 			<PopoverContent>
 				<PopoverBody>
-					<Select
+					<ChakraSelect
+						sizes="md"
+						isFullWidth
 						isDisabled={isDisabled}
-						isSearchable={false}
-						defaultValue={selectedOption}
-						value={selectedOption}
+						value={method}
 						onChange={(value) =>
 							setFilterState((draft: any) => {
 								const filterDraft = objectPath.get(draft, path);
-								filterDraft.property.method = value?.value;
+								filterDraft.property.method = value;
 							})
 						}
 						options={PROPERTY_OPTIONS}
 					/>
+
 					{PropertySetupComponent ? <PropertySetupComponent /> : null}
 				</PopoverBody>
 			</PopoverContent>

@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { useWizard, Wizard } from 'react-use-wizard';
 import { useCreateGateway } from '../../features/accessControl/hooks/useCreateGateway';
+import { ChakraSelect } from '../../features/filters/components/ChakraSelect';
 import { Filters } from '../../features/filters/components/Filters';
 import { useWeb3 } from '../../features/web3/components/Web3Provider';
 
@@ -50,8 +51,8 @@ function CreateAppDescription() {
 				<Alert my="2" rounded="base" status="warning">
 					<AlertIcon />
 					<Box>
-						Grant access only to the <b>page</b> you want to share with the community. No need to give access to the entire
-						workspace.
+						Grant access only to the <b>page</b> you want to share with the community. No need to give access to the
+						entire workspace.
 					</Box>
 				</Alert>
 				{/* <Text>
@@ -83,7 +84,7 @@ const AccessLevelOptions = [
 ];
 
 function CreateAppForm() {
-	const [accessLevel, setAccessLevel] = useState(AccessLevelOptions[0]);
+	const [accessLevel, setAccessLevel] = useState(AccessLevelOptions[0].value);
 	const [filter, setFilter] = useState({ filter: { operator: 'and', filters: [] } });
 	const [pageURL, setPageURL] = useState('');
 	const toast = useToast();
@@ -116,11 +117,12 @@ function CreateAppForm() {
 				</FormControl>
 				<FormControl>
 					<FormLabel>Access Level</FormLabel>
-					<Select
+					<ChakraSelect
 						isDisabled={isLoading}
 						options={AccessLevelOptions}
 						value={accessLevel}
 						onChange={(value) => value && setAccessLevel(value)}
+						sizes="md"
 					/>
 				</FormControl>
 				<FormControl>
@@ -132,7 +134,7 @@ function CreateAppForm() {
 				<Button
 					mt="2"
 					onClick={() => {
-						mutate({ filter, props: { pageLink: pageURL, permission: accessLevel.value } });
+						mutate({ filter, props: { pageLink: pageURL, permission: accessLevel } });
 					}}
 					isLoading={isLoading}
 					colorScheme="green"

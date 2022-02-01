@@ -1,6 +1,6 @@
-import { Avatar, Text } from '@chakra-ui/react';
 import { components } from 'moralis/types/generated/web3Api';
 import { ReactNode } from 'react';
+import { FastImage } from '../../../../components/FastImage';
 import { useTokenMetadata } from '../../hooks/useTokenMetadata';
 
 export function TokenMetadata({
@@ -16,7 +16,9 @@ export function TokenMetadata({
 
 	return metadata?.[0].symbol ? (
 		<>
-			{metadata?.[0].logo && <Avatar mr="2px" w="22px" h="22px" src={metadata?.[0].logo} />}
+			{metadata?.[0].logo && (
+				<FastImage key={metadata?.[0].logo} mr="2px" src={metadata?.[0].logo} cdn={{ w: 22, h: 22 }} />
+			)}
 			{metadata?.[0].symbol && metadata?.[0].symbol}
 		</>
 	) : (
