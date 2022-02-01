@@ -49,9 +49,9 @@ export function PropertySelector() {
 	const { contractAddress, chain } = filter.property.parameters;
 
 	return (
-		<Popover isLazy>
+		<Popover isLazy placement='bottom-start'>
 			<PopoverTrigger>
-				<Button size="sm" variant="outline" rightIcon={<FaCaretDown />}>
+				<Button minW={'172px'} textOverflow="ellipsis" size="sm" variant="outline" rightIcon={<FaCaretDown />}>
 					{method === 'eth_nativeBalance' ? (
 						<>
 							<NativeTokenMetadata chain={chain} />
