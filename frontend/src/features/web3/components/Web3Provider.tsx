@@ -111,18 +111,23 @@ export function Web3Provider({ children }: { children?: ReactNode | undefined })
 		[web3, onboard],
 	);
 
+	const prevIsWalletSelected = usePrevious(onboard?.isWalletSelected);
 	const prevAddress = usePrevious(onboard?.address);
 
 	useEffect(() => {
-		if (prevAddress && !onboard.address) {
+		if (prevIsWalletSelected && !onboard.address) {
 			amplitude.getInstance().logEvent('User_Wallet_Disconnected');
 			amplitude.getInstance().setUserId(null);
 		}
-		if (prevAddress !== onboard.address && onboard.address) {
+		if (prevIsWalletSelected && prevAddress && prevAddress !== onboard.address) {
+			amplitude.getInstance().logEvent('User_Wallet_Switch', { switchTo: onboard.address });
+			amplitude.getInstance().setUserId(onboard.address);
+		}
+		if (!prevIsWalletSelected && onboard.address) {
 			amplitude.getInstance().setUserId(onboard.address);
 			amplitude.getInstance().logEvent('User_Wallet_Connected', { walletName: onboard.wallet.name });
 		}
-	}, [onboard.address, sign]);
+	}, [prevIsWalletSelected, sign]);
 
 	useEffect(() => {
 		if (!sign && web3 && onboard.address) {
