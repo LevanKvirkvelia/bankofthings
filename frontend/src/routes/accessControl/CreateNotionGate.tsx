@@ -46,7 +46,7 @@ function CreateAppDescription() {
 	const md5Token = useMemo(() => md5(`${address}:bankofthings`.toLowerCase()), [address]);
 	return (
 		<>
-			<HeadingList number={1} text={`Grant "Full Access" to the page to our bot team@bankofthings.com`} />
+			<HeadingList number={1} text={`Grant "Full Access" to the page to our bot notion@bankofthings.com`} />
 			<Text mx="6">
 				<Alert my="2" rounded="base" status="warning">
 					<AlertIcon />

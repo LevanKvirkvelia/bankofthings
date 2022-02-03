@@ -91,7 +91,7 @@ export const EthProperties = {
             : blockId,
         chain: chain,
       });
-      console.log("native balance", Number(balance) / 10 ** Number(18));
+
       return Number(balance) / 10 ** Number(18);
     },
   },
