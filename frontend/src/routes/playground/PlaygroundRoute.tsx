@@ -118,15 +118,9 @@ const DEMOS = [
 //
 
 export function PlaygroundRoute() {
-	const { address } = useWeb3();
 
 	const [filter, setFilter] = useState(DEMOS[0].filter);
 	const [userAddress, setUserAddress] = useState(DEMOS[0].userAddress);
-
-	const prevConnectedWalletAddress = usePrevious(address);
-	useEffect(() => {
-		if (!prevConnectedWalletAddress && address) setUserAddress(address);
-	}, [prevConnectedWalletAddress, address]);
 
 	const toast = useToast();
 
