@@ -1,13 +1,9 @@
 import { Button, Popover, PopoverBody, PopoverContent, PopoverTrigger, VStack } from '@chakra-ui/react';
-import Select from 'react-select';
 import { FaCaretDown } from 'react-icons/fa';
-import { useMemo } from 'react';
-import { Updater } from 'use-immer';
 import objectPath from 'object-path';
 import { NetworkSelector } from './NetworkSelector';
 import { ContractAddressInput } from './ContractAddressInput';
 import { useFilterContext } from '../../hooks/useFilterContext';
-import { useTokenMetadata } from '../../hooks/useTokenMetadata';
 import { TokenMetadata } from '../metadata/TokenMetadata';
 import { NFTMetadata } from '../metadata/NFTMetadata';
 import { NativeTokenMetadata } from '../metadata/NativeTokenMetadata';

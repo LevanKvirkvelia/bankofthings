@@ -11,6 +11,22 @@ type ChainMetadata = {
 	symbol: string;
 	logo: string;
 	name: string;
+	tokenList?: string;
+};
+
+export type TokenList = {
+	name: string;
+	logoURI: string;
+	tokens: Token[];
+};
+
+export type Token = {
+	chainId: number;
+	address: string;
+	decimals: number;
+	name: string;
+	symbol: string;
+	logoURI: string;
 };
 
 export const chains: ChainMetadata[] = [
@@ -20,6 +36,7 @@ export const chains: ChainMetadata[] = [
 		symbol: 'ETH',
 		name: 'Ethereum',
 		logo: 'https://bankofthings.nyc3.cdn.digitaloceanspaces.com/logos/ETH_logo.png',
+		tokenList: 'https://tokens.coingecko.com/uniswap/all.json',
 	},
 	{
 		network: 'bsc',
@@ -27,6 +44,7 @@ export const chains: ChainMetadata[] = [
 		symbol: 'BNB',
 		name: 'Binance Smart Chain',
 		logo: 'https://bankofthings.nyc3.cdn.digitaloceanspaces.com/logos/BNB_logo.png',
+		tokenList: 'https://tokens.pancakeswap.finance/pancakeswap-extended.json',
 	},
 	{
 		network: 'polygon',
@@ -34,6 +52,7 @@ export const chains: ChainMetadata[] = [
 		symbol: 'MATIC',
 		name: 'Polygon',
 		logo: 'https://bankofthings.nyc3.cdn.digitaloceanspaces.com/logos/MATIC_logo.png',
+		tokenList: 'https://unpkg.com/quickswap-default-token-list@1.0.91/build/quickswap-default.tokenlist.json',
 	},
 	{
 		network: 'avalanche',
@@ -41,6 +60,7 @@ export const chains: ChainMetadata[] = [
 		symbol: 'AVAX',
 		name: 'Avalanche',
 		logo: 'https://bankofthings.nyc3.cdn.digitaloceanspaces.com/logos/AVAX_logo.png',
+		tokenList: 'https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/joe.tokenlist.json',
 	},
 	{
 		network: 'fantom',
@@ -48,6 +68,7 @@ export const chains: ChainMetadata[] = [
 		symbol: 'FTM',
 		name: 'Fantom',
 		logo: 'https://bankofthings.nyc3.cdn.digitaloceanspaces.com/logos/FTM_logo.png',
+		tokenList: 'https://raw.githubusercontent.com/Crocoswap/tokenlists/main/aeb.tokenlist.json',
 	},
 	{
 		network: 'goerli',

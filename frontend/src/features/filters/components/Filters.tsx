@@ -50,7 +50,7 @@ export function Filters({
 						setFilterState((draft: any) => {
 							draft?.filter.filters.push({
 								filter: { operator: 'number_greater_than_or_equal_to', value: '' },
-								property: { method: 'eth_ERC20Balance', parameters: { chain: 'eth', contractAdress: '' } },
+								property: { method: 'eth_ERC20Balance', parameters: { chain: 'eth', contractAddress: '' } },
 							});
 						});
 					}}

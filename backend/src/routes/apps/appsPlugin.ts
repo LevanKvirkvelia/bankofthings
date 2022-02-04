@@ -139,7 +139,7 @@ export default fp(async function (fastify, opts) {
       wallet,
       props,
     });
-    
+
     res
       .code(200)
       .cookie("sign", sign, { path: "/" })
@@ -186,7 +186,7 @@ export default fp(async function (fastify, opts) {
       throw new Error("Pass a valid sign or userAddress");
 
     const hasAccess = await evalFilter(filter, {
-      user_address: wallet || userAddress,
+      user_address: userAddress || wallet,
     });
     return { hasAccess, gate };
   });
