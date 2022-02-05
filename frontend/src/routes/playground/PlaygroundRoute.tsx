@@ -118,7 +118,6 @@ const DEMOS = [
 //
 
 export function PlaygroundRoute() {
-
 	const [filter, setFilter] = useState(DEMOS[0].filter);
 	const [userAddress, setUserAddress] = useState(DEMOS[0].userAddress);
 
@@ -154,7 +153,7 @@ export function PlaygroundRoute() {
 			>
 				<Box width={{ base: '100%', md: '50%' }} p="6" bg="white" rounded="xl">
 					<Heading as="h1" size="lg">
-						Demos
+						Examples
 					</Heading>
 					<VStack
 						mt={2}
@@ -189,11 +188,11 @@ export function PlaygroundRoute() {
 						Playground
 					</Heading>
 					<Box mt={2} maxW="container.md">
-						Play with blockchain reqierements and test on any wallet
+						Check if a wallet meets the access conditions
 					</Box>
 					<VStack spacing={2} mt={4}>
 						<FormControl>
-							<FormLabel>Address</FormLabel>
+							<FormLabel>Wallet address or ENS domain</FormLabel>
 							<Input
 								autoComplete="off"
 								value={userAddress}

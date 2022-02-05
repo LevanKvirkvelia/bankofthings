@@ -102,6 +102,7 @@ function ConnectWallet() {
 
 export function SmallAppCard({ app }: { app: APP }) {
 	const navigate = useNavigate();
+	const { isWalletSelected, selectWallet } = useWeb3();
 
 	return (
 		<Box boxShadow="sm" bg="white" my="1" p="4" rounded="md">
@@ -115,8 +116,10 @@ export function SmallAppCard({ app }: { app: APP }) {
 			{app.active ? (
 				<Button
 					size="sm"
-					onClick={() => {
+					onClick={async () => {
+						if (!isWalletSelected) await selectWallet?.()
 						navigate(`/gateway/create/${app.id}`);
+;
 					}}
 				>
 					Create Gateway
