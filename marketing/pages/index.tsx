@@ -19,7 +19,7 @@ const Home: NextPage = () => {
   return (
     <div>
       <Flex
-        bgColor=""
+        bgColor="gray.800"
         boxShadow="sm"
         position="sticky"
         top="0"
