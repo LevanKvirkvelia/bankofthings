@@ -54,6 +54,24 @@ function MyApp({ Component, pageProps }: AppProps) {
             content="Access Notion, Web2 domains, Twitter, and Discord via NFT or DAO token"
           />
           <meta property="og:url" content="https://www.bankofthings.com/" />
+
+          <script
+            type="text/javascript"
+            dangerouslySetInnerHTML={{
+              __html: `   
+              (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+              m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+              (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+           
+              ym(87407693, "init", {
+                   clickmap:true,
+                   trackLinks:true,
+                   accurateTrackBounce:true,
+                   webvisor:true
+              });
+        `,
+            }}
+          />
         </Head>
         <Component {...pageProps} />
       </>
