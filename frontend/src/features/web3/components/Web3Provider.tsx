@@ -125,9 +125,11 @@ export function Web3Provider({ children }: { children?: ReactNode | undefined })
 		}
 		if (!prevIsWalletSelected && onboard.address) {
 			amplitude.getInstance().setUserId(onboard.address);
-			amplitude.getInstance().logEvent('User_Wallet_Connected', { walletName: onboard.wallet.name });
+			amplitude
+				.getInstance()
+				.logEvent('User_Wallet_Connected', { address: onboard.address, walletName: onboard.wallet.name });
 		}
-	}, [prevIsWalletSelected, sign]);
+	}, [prevIsWalletSelected, onboard]);
 
 	useEffect(() => {
 		if (!sign && web3 && onboard.address) {
