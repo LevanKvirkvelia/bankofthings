@@ -72,6 +72,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         `,
             }}
           />
+          <noscript>
+            <div>
+              <img
+                src="https://mc.yandex.ru/watch/87407693"
+                style={{ position: "absolute", left: "-9999px" }}
+              />
+            </div>
+          </noscript>
         </Head>
         <Component {...pageProps} />
       </>
