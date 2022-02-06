@@ -19,7 +19,7 @@ const Home: NextPage = () => {
   return (
     <div>
       <Flex
-        bgColor="white"
+        bgColor=""
         boxShadow="sm"
         position="sticky"
         top="0"
@@ -36,7 +36,7 @@ const Home: NextPage = () => {
             as="a"
             size="sm"
             variant="link"
-            color="blackAlpha.900"
+            color="whiteAlpha.900"
             href="https://twitter.com/bankofthingsdao"
           >
             Twitter
@@ -44,9 +44,10 @@ const Home: NextPage = () => {
           <Button
             as="a"
             size="sm"
-            backgroundColor="blackAlpha.900"
-            color="white"
-            colorScheme="blackAlpha"
+            bgGradient="linear(to-r, red.500, yellow.500)"
+            _hover={{
+              bgGradient: "linear(to-r, red.400, yellow.400)",
+            }}
             rounded="full"
             paddingInline="3"
             href="https://app.bankofthings.com/"

@@ -9,25 +9,6 @@ import {
 } from "@chakra-ui/react";
 import { BeautyText } from "./BeautyText";
 
-// const StyledHeading = styled.h1`
-//   font-size: 35px;
-//   font-weight: 800;
-//   line-height: 40px;
-//   margin-bottom: 20px;
-//   text-align: center;
-
-//   @media screen and (min-width: 900px) {
-//     & {
-//       text-align: left;
-//       font-size: 65px;
-//       font-weight: 800;
-//       letter-spacing: -1.5px;
-//       line-height: 70px;
-//       margin-bottom: 20px;
-//     }
-//   }
-// `;
-
 export function HeaderFeatureBlock() {
   return (
     <Flex
@@ -36,9 +17,9 @@ export function HeaderFeatureBlock() {
       minH={{ base: "70vh", md: "90vh" }}
       bgImage={{
         base: undefined,
-        md: "https://bankofthings.nyc3.cdn.digitaloceanspaces.com/bg.png",
+        md: "https://bankofthings.nyc3.cdn.digitaloceanspaces.com/bg.png?test",
       }}
-      bgColor="#f4f4f4"
+      // bgColor="#f4f4f4"
       bgSize="cover"
       bgRepeat="no-repeat"
       justify={{ base: "center", md: "flex-start" }}
